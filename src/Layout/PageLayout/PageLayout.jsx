@@ -3,9 +3,12 @@ import SideBar from "../../Components/SideBar/SideBar";
 import { useLocation } from "react-router-dom";
 
 
+
 const PageLayout = ({children}) => {
     const {pathname} = useLocation();
   return (
+    
+      
    <Flex >
    
     {/* Side bar on the Left */}
@@ -19,6 +22,7 @@ const PageLayout = ({children}) => {
       {children}
     </Box>
    </Flex>
+   
   );
 };
 export default PageLayout

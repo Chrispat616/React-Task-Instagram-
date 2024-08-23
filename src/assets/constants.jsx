@@ -116,27 +116,10 @@ export const ReelsLogo = () => (
 );
 
 export const MessagesLogo = () => (
-	<svg
-		aria-label='Messenger'
-		color='rgb(245, 245, 245)'
-		fill='rgb(245, 245, 245)'
-		height='24'
-		role='img'
-		viewBox='0 0 24 24'
-		width='24'
-	>
-		<path
-			d='M12.003 2.001a9.705 9.705 0 1 1 0 19.4 10.876 10.876 0 0 1-2.895-.384.798.798 0 0 0-.533.04l-1.984.876a.801.801 0 0 1-1.123-.708l-.054-1.78a.806.806 0 0 0-.27-.569 9.49 9.49 0 0 1-3.14-7.175 9.65 9.65 0 0 1 10-9.7Z'
-			fill='none'
-			stroke='currentColor'
-			strokeMiterlimit='10'
-			strokeWidth='1.739'
-		></path>
-		<path
-			d='M17.79 10.132a.659.659 0 0 0-.962-.873l-2.556 2.05a.63.63 0 0 1-.758.002L11.06 9.47a1.576 1.576 0 0 0-2.277.42l-2.567 3.98a.659.659 0 0 0 .961.875l2.556-2.049a.63.63 0 0 1 .759-.002l2.452 1.84a1.576 1.576 0 0 0 2.278-.42Z'
-			fillRule='evenodd'
-		></path>
-	</svg>
+	<svg aria-label="Direct" className="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24">
+		<title>Direct</title><line fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" x1="22" x2="9.218" y1="3" y2="10.083">
+			</line><polygon fill="none" points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334" stroke="currentColor" strokeLinejoin="round" strokeWidth="2">
+		</polygon></svg>
 );
 
 export const NotificationsLogo = () => (
@@ -242,3 +225,12 @@ export const MenuLogo =() =>(
         <title>Settings</title>
         <path d="M3.5 6.5h17a1.5 1.5 0 0 0 0-3h-17a1.5 1.5 0 0 0 0 3Zm17 4h-17a1.5 1.5 0 0 0 0 3h17a1.5 1.5 0 0 0 0-3Zm0 7h-17a1.5 1.5 0 0 0 0 3h17a1.5 1.5 0 0 0 0-3Z"></path></svg>
 );
+
+export const BookMarkLogo =() =>(
+<svg aria-label="Save" className="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24">
+	<title>Save</title>
+	<polygon fill="none" points="20 21 12 13.44 4 21 4 3 20 3 20 21" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></polygon></svg>
+);
+// export const NewTabLogo =() =>(
+  
+// )
