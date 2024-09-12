@@ -7,6 +7,7 @@ import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import useAuthStore from "./store/authStore";
 function App() {
   const  authUser = useAuthStore(state => state.user)
+  console.log(import.meta.env.VITE_APP_KEY);
   return(
     <>
     <PageLayout>
@@ -21,3 +22,4 @@ function App() {
 }
 
 export default App;
+
