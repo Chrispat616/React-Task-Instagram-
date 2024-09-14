@@ -2,7 +2,7 @@ import { Flex, Box, Text, InputRightElement, InputGroup, Button, Input} from "@c
 import { useState } from "react";
 import {CommentLogo, NotificationsLogo, UnlikeLogo, MessagesLogo, BookMarkLogo} from '../../assets/constants'
 
-const PostFooter = ({username}) => {
+const PostFooter = ({username, isProfilePage}) => {
   const[liked,setLiked]= useState(false);
   const[likes, setLikes] =useState(2100);
   const [comment, setComment] = useState("");
@@ -17,13 +17,11 @@ const PostFooter = ({username}) => {
     }
   }
   const handleCommentChange = (e) => {
-    setComment(e.target.value); // Update comment state with input value
+    setComment(e.target.value); 
   };
-
-
   return (
     <>
-    <Box mb={8}>
+    <Box mb={8} marginTop={"auto"}>
       <Flex alignItems={"center"} gap={4} w={"full"} pt={0} mt={"2"}>
         <Box onClick={handleLike} cursor={"pointer"} fontSize={18}>
           {!liked ? (<NotificationsLogo/>): (<UnlikeLogo/>)}
@@ -34,18 +32,16 @@ const PostFooter = ({username}) => {
         <Box cursor={"pointer"} fontSize={18}>
           <MessagesLogo/>
         </Box>
-        
         <Box  cursor={"pointer"}  ml={"auto"} >
-          
-            <BookMarkLogo />
-            
+            <BookMarkLogo />  
         </Box>
-        
       </Flex>
       <Text fontWeight={600} fontSize={"sm"}> 
         {likes} likes
       </Text>
-      <Text fontSize={"sm"} fontWeight={700}>
+     {!isProfilePage && (
+      <>
+         <Text fontSize={"sm"} fontWeight={700}>
         {username}{"   "}
         <Text as='span'  fontWeight={400}>
          We just getting started 
@@ -54,11 +50,12 @@ const PostFooter = ({username}) => {
       <Text fontSize={"small"} color={"grey"} cursor={"pointer"} >
         View all 1,500 comments
       </Text>
+      </>)}
       <Flex alignItems={"center"} gap={2} justifyContent={"space-between"} w={"full"}>
       <InputGroup >
       <Input variant={"flushed"} placeholder={"Add a comment..."} fontSize={14}
-      value={comment} // Bind input value to state
-      onChange={handleCommentChange} // Update state on input change
+      value={comment} 
+      onChange={handleCommentChange} 
       />
        <InputRightElement>
        {comment && ( // Conditionally render button based on comment state
@@ -69,7 +66,6 @@ const PostFooter = ({username}) => {
          _hidden={true} 
          _hover={{color: "white"}} 
          bg={"transparent"}>
-         
           Post
          </Button>
          )}

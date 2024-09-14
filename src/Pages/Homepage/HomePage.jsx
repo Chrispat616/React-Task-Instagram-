@@ -5,10 +5,8 @@ import SuggestedUsers from "../../Components/SuggestedUsers/SuggestedUsers";
 
 const HomePage = () => {
   return (
-   
     <Container maxW={"container.lg"}>
       <Flex gap={20}>
-        
         <Box flex={2} py={10}>
           <VStack>
             <Flex gap={5} 
@@ -21,16 +19,12 @@ const HomePage = () => {
              <UpperBar />
          </Box>
           <FeedPosts/>
-          
           </VStack>
         </Box>
         <Box flex={3} mr={20} display={{ base: "none", lg: "block"}} maxW={"300px"} >
           <SuggestedUsers/>
-        </Box >
-         {/* UpperBar at the Top */}
-     
+        </Box >  
       </Flex>
-
     </Container>
   )
 }
