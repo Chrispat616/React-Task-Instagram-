@@ -30,7 +30,7 @@ const useLogin = () => {
         }
         
     } catch (error) {
-        showToast("Erorr", error.message, "error");
+        showToast("Error", error.message, "error");
     }
   };
   return {loading, error, login};
