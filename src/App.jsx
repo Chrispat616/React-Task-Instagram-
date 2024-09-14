@@ -1,13 +1,13 @@
-
 import { Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./Pages/Homepage/HomePage";
 import AuthPage from "./Pages/AuthPage/AuthPage";
 import PageLayout from "./Layout/PageLayout/PageLayout";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import useAuthStore from "./store/authStore";
+
 function App() {
   const  authUser = useAuthStore(state => state.user)
-  console.log(import.meta.env.VITE_APP_KEY);
+  
   return(
     <>
     <PageLayout>

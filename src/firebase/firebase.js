@@ -4,13 +4,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDuuetHxnENlq__GF7hNgohL4iZd1wYNmY",
-  authDomain: "react-task-instagram.firebaseapp.com",
-  projectId: "react-task-instagram",
-  storageBucket: "react-task-instagram.appspot.com",
-  messagingSenderId: "997758284032",
-  appId: "1:997758284032:web:a304bc3046e51d725c83e5",
-  measurementId: "G-DXXM0H0X11"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain:import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket:import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId:import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId:import.meta.env.VITE_APP_ID ,
+  measurementId:import.meta.env.VITE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
@@ -18,4 +18,6 @@ const auth = getAuth(app)
 const firestore = getFirestore(app)
 const storage = getStorage(app)
 
-export {app, auth, firestore, storage}
+export {app, auth, firestore, storage, firebaseConfig}
+
+
