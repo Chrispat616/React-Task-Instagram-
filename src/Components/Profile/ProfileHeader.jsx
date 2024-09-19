@@ -8,8 +8,8 @@ const ProfileHeader = () => {
   const authUser = useAuthStore(state => state.user);
   const {isFollowing,isUpdating, handleFollowUser} = useFollowAndUnfollowUser(userProfile.uid);
 
-  const visitingOwnProfileAndAuth =  authUser && authUser.username === userProfile?.username;
-  const visitingAnotherProfileAndAuth =  authUser && authUser.username !== userProfile.username;
+  const isVisitingOwnProfileAndAuth =  authUser && authUser.username === userProfile?.username;
+  const isVisitingAnotherProfileAndAuth =  authUser && authUser.username !== userProfile.username;
 
   return (
     <Flex gap={{base:4, sm:10}} py={10} direction={{base:"column", sm:"row"}}>
@@ -27,7 +27,7 @@ const ProfileHeader = () => {
           <Text fontSize={{base: "small", md: "large"}}>
                {userProfile.username}
           </Text>
-          {visitingOwnProfileAndAuth && <Flex gap={4} alignItems={"center"} justifyContent={"center"}>
+          {isVisitingOwnProfileAndAuth && <Flex gap={4} alignItems={"center"} justifyContent={"center"}>
              <Button bg={"dimgray"} color={"white"} _hover={{bg:"gray"}} size={{base:"xs", md: "sm"}} >
               Edit Profile
              </Button>
@@ -35,7 +35,7 @@ const ProfileHeader = () => {
               View archive
              </Button>
           </Flex>}
-          {visitingAnotherProfileAndAuth && <Flex gap={4} alignItems={"center"} justifyContent={"center"}>
+          {isVisitingAnotherProfileAndAuth && <Flex gap={4} alignItems={"center"} justifyContent={"center"}>
              <Button 
              bg={"blue.600"} 
              color={"white"} 

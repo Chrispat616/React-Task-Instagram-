@@ -23,7 +23,6 @@ const Home = () => {
       padding={2}
       w={{ base: 10, md: "full" }}
       justifyContent={{ base: "center", md: "flex-start" }}
-    //   mt={item.marginTop || 0}
     >
       <GoHomeFill size={25} />
       <Box display={{ base: "none", md: "block" }}>
