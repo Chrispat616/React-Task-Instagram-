@@ -1,12 +1,15 @@
 import { Avatar,Text, AvatarGroup, Flex, VStack, Button } from "@chakra-ui/react"
 import useUserProfileStore from "../../store/userProfileStore";
 import useAuthStore from "../../store/authStore";
+import useFollowAndUnfollowUser from "../../hooks/useFollowAndUnfollowUser";
 
 const ProfileHeader = () => {
   const {userProfile} = useUserProfileStore();
   const authUser = useAuthStore(state => state.user);
-  const visitingOwnProfileAndAuth =  authUser && authUser.username === userProfile.username;
-  const visitingAnotherProfileAndAuth =  authUser && authUser.username !== userProfile.username;
+  const {isFollowing,isUpdating, handleFollowUser} = useFollowAndUnfollowUser(userProfile.uid);
+
+  const isVisitingOwnProfileAndAuth =  authUser && authUser.username === userProfile?.username;
+  const isVisitingAnotherProfileAndAuth =  authUser && authUser.username !== userProfile.username;
 
   return (
     <Flex gap={{base:4, sm:10}} py={10} direction={{base:"column", sm:"row"}}>
@@ -24,7 +27,7 @@ const ProfileHeader = () => {
           <Text fontSize={{base: "small", md: "large"}}>
                {userProfile.username}
           </Text>
-          {visitingOwnProfileAndAuth && <Flex gap={4} alignItems={"center"} justifyContent={"center"}>
+          {isVisitingOwnProfileAndAuth && <Flex gap={4} alignItems={"center"} justifyContent={"center"}>
              <Button bg={"dimgray"} color={"white"} _hover={{bg:"gray"}} size={{base:"xs", md: "sm"}} >
               Edit Profile
              </Button>
@@ -32,9 +35,16 @@ const ProfileHeader = () => {
               View archive
              </Button>
           </Flex>}
-          {visitingAnotherProfileAndAuth && <Flex gap={4} alignItems={"center"} justifyContent={"center"}>
-             <Button bg={"blue.600"} color={"white"} _hover={{bg:"gray"}} size={{base:"xs", md: "sm"}} >
-              Follow
+          {isVisitingAnotherProfileAndAuth && <Flex gap={4} alignItems={"center"} justifyContent={"center"}>
+             <Button 
+             bg={"blue.600"} 
+             color={"white"} 
+             _hover={{bg:"gray"}} 
+             size={{base:"xs", md: "sm"}}
+             onClick={handleFollowUser}
+             isLoading={isUpdating} 
+             >
+              {isFollowing? "Unfollow" : "Follow"}
              </Button>
           </Flex>}
           

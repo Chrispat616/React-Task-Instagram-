@@ -17,14 +17,11 @@ const AuthPage = () => {
              <Flex gap={5} justifyContent={"center"} >
                <Image src='/playstore.png' height={"10"} alt='Playstore logo'/>
                <Image src='/microsoft.png' height={"10"} alt='Microsoft logo'/>
-
               </Flex>
             </VStack>
           </Flex>
-            
-           
         </Container>
       </Flex>
   )
 }
-export default AuthPage
+export default AuthPage;
