@@ -1,21 +1,33 @@
-
-import ProfilePost from "./ProfilePost"
-import { Grid } from "@chakra-ui/react"
+import useGetUserPosts from "../../hooks/useGetUserPosts";
+import ProfilePost from "./ProfilePost";
+import { Flex, Grid, Text } from "@chakra-ui/react";
 
 const ProfilePosts = () => {
+  const { isLoading, posts } = useGetUserPosts();
+  const noPostsFound = !isLoading && posts.length === 0;
+  if (noPostsFound) return <NoPostsFound />;
+
   return (
     <Grid
-    templateColumns={{
-      sm: "repeat(1, 1fr)",
-      md: "repeat(3, 1fr)"
-    }}
-    gap={1}
-    columnGap={1}>
-    <ProfilePost img='/img5Amg-int.jpg' />
-    <ProfilePost img='/img6Amg.jpg' />
-    <ProfilePost img='/img7home.jpg' />
-    <ProfilePost img='/imgSW.png' />
+      templateColumns={{
+        sm: "repeat(1, 1fr)",
+        md: "repeat(3, 1fr)",
+      }}
+      gap={1}
+      columnGap={1}
+    >
+      {posts.map((post) => (
+        <ProfilePost post={post} key={post.id} />
+      ))}
     </Grid>
-  )
-}
-export default ProfilePosts
+  );
+};
+export default ProfilePosts;
+
+const NoPostsFound = () => {
+  return (
+    <Flex flexDir="column" textAlign={"center"} mx={"auto"} mt={10}>
+      <Text fontSize={"2xl"}>No Posts Found</Text>
+    </Flex>
+  );
+};
