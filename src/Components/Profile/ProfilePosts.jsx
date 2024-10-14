@@ -1,10 +1,19 @@
 import useGetUserPosts from "../../hooks/useGetUserPosts";
 import ProfilePost from "./ProfilePost";
-import { Flex, Grid, Text } from "@chakra-ui/react";
+import { Flex, Grid, Spinner, Text } from "@chakra-ui/react";
 
 const ProfilePosts = () => {
   const { isLoading, posts } = useGetUserPosts();
   const noPostsFound = !isLoading && posts.length === 0;
+
+  if (isLoading) {
+    return (
+      <Flex justify="center" align="center" minH="50vh">
+        <Spinner size="xl" thickness="4px" speed="0.65s" color="blue.500" />
+      </Flex>
+    );
+  }
+
   if (noPostsFound) return <NoPostsFound />;
 
   return (
@@ -15,6 +24,7 @@ const ProfilePosts = () => {
       }}
       gap={1}
       columnGap={1}
+      isLoading={isLoading}
     >
       {posts.map((post) => (
         <ProfilePost post={post} key={post.id} />
