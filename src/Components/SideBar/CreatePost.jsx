@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -18,13 +19,11 @@ import {
 } from "@chakra-ui/react";
 import { CreatePostLogo } from "../../assets/constants";
 import { BsFillImageFill } from "react-icons/bs";
-import { useRef, useState } from "react";
 import usePreviewImage from "../../hooks/usePreviewImage";
 import useShowToast from "../../hooks/useShowToast";
 import useAuthStore from "../../store/authStore";
 import usePostStore from "../../store/postStore";
 import useUserProfileStore from "../../store/userProfileStore";
-import { useLocation } from "react-router-dom";
 import {
   arrayUnion,
   collection,
@@ -34,6 +33,7 @@ import {
 } from "firebase/firestore";
 import { firestore, storage } from "../../firebase/firebase";
 import { getDownloadURL, uploadString, ref } from "firebase/storage";
+import { useLocation } from "react-router-dom";
 
 const CreatePost = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -143,6 +143,7 @@ function useCreatePost() {
   const authUser = useAuthStore((state) => state.user);
   const createPost = usePostStore((state) => state.createPost);
   const addPost = useUserProfileStore((state) => state.addPost);
+  const userProfile = useUserProfileStore((state) => state.userProfile);
   const { pathname } = useLocation();
 
   const handleCreatePost = async (selectedFile, caption) => {
@@ -166,8 +167,11 @@ function useCreatePost() {
       await updateDoc(postDocRef, { imageURL: downloadURL });
 
       newPost.imageURL = downloadURL;
-      createPost({ ...newPost, id: postDocRef.id });
-      addPost({ ...newPost, id: postDocRef.id });
+
+      if (userProfile.uid === authUser.uid)
+        createPost({ ...newPost, id: postDocRef.id });
+      if (pathname !== "/" && userProfile.uid === authUser.uid)
+        addPost({ ...newPost, id: postDocRef.id });
 
       showToast("Success", "Post created successfully", "success");
     } catch (error) {

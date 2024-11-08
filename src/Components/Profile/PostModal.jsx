@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Flex,
   Modal,
@@ -22,6 +23,7 @@ import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import Comments from "../Comments/Comments";
 import Caption from "../Comments/Caption";
 import PostFooter from "../Feedposts/PostFooter";
+import usePostStore from "../../store/postStore";
 
 const PostModal = ({
   post,
@@ -29,12 +31,19 @@ const PostModal = ({
   onClose,
   handleEdit,
   handleDeletePost,
-  isDeleting,
   menuVisible,
   setMenuVisible,
   userProfile,
   authUser,
 }) => {
+  const { fetchComments } = usePostStore();
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchComments(post.id);
+    }
+  }, [isOpen, post.id, fetchComments]);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -73,9 +82,9 @@ const PostModal = ({
               <Flex alignItems={"center"} justifyContent={"space-between"}>
                 <Flex alignItems={"center"} gap={4}>
                   <Avatar
-                    src={userProfile.ProfilePicURL}
+                    src={userProfile.profilePicURL}
                     size={"sm"}
-                    name="Doe"
+                    name={userProfile.fullname}
                   />
                   <Text fontWeight={"bold"} fontSize={12}>
                     {userProfile.username}
@@ -103,7 +112,6 @@ const PostModal = ({
                       <MenuItem
                         icon={<DeleteIcon />}
                         onClick={handleDeletePost}
-                        isLoading={isDeleting}
                       ></MenuItem>
                     </MenuList>
                   </Menu>
@@ -115,10 +123,15 @@ const PostModal = ({
                 alignItems={"start"}
                 maxH={"350px"}
                 overflowY={"auto"}
+                style={{ paddingLeft: 25 }}
               >
                 {post.caption && <Caption post={post} />}
-                {post.comments.map((comment) => (
-                  <Comments key={comment.id} comment={comment} />
+                {post.comments.map((comment, index) => (
+                  <Comments
+                    key={comment.id || index}
+                    comment={comment}
+                    postId={post.id}
+                  />
                 ))}
               </VStack>
               <Divider my={4} bg={"gray.800"} />

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import {
   Flex,
   Box,
@@ -6,8 +7,9 @@ import {
   InputGroup,
   Button,
   Input,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+
 import {
   CommentLogo,
   NotificationsLogo,
@@ -18,13 +20,24 @@ import {
 import usePostComment from "../../hooks/usePostComment";
 import useAuthStore from "../../store/authStore";
 import useLikePosts from "../../hooks/useLikePosts";
+import moment from "moment/moment";
+import CommentsModal from "../Modals/CommentsModal";
+import usePostStore from "../../store/postStore";
 
-const PostFooter = ({ post, username, isProfilePage }) => {
+const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
+  const { fetchComments } = usePostStore();
   const { isCommenting, handlePostComment } = usePostComment();
   const [comment, setComment] = useState("");
   const authUser = useAuthStore((state) => state.user);
-  const commentRef = useRef(null);
+  const commentRef = useRef();
   const { handleLikePost, isLiked, likes } = useLikePosts(post);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    {
+      fetchComments(post.id);
+    }
+  }, [post.id, fetchComments]);
 
   const handleSubmitComment = async () => {
     await handlePostComment(post.id, comment);
@@ -55,27 +68,43 @@ const PostFooter = ({ post, username, isProfilePage }) => {
         <Text fontWeight={600} fontSize={"sm"}>
           {likes} likes
         </Text>
+
+        {isProfilePage && (
+          <Text fontSize={12} color={"gray"}>
+            {moment(post.createdAt).fromNow()}
+          </Text>
+        )}
         {!isProfilePage && (
           <>
             <Text fontSize={"sm"} fontWeight={700}>
-              {username}
+              {creatorProfile?.username}
               {"   "}
               <Text as="span" fontWeight={400}>
-                We just getting started
+                {post.caption}
               </Text>
             </Text>
-            <Text fontSize={"small"} color={"grey"} cursor={"pointer"}>
-              View all 1,500 comments
-            </Text>
+            {post.comments.length > 0 && (
+              <Text
+                fontSize={"small"}
+                color={"grey"}
+                cursor={"pointer"}
+                onClick={onOpen}
+              >
+                View all {post.comments.length} comments
+              </Text>
+            )}
+            {isOpen ? (
+              <CommentsModal isOpen={isOpen} onClose={onClose} post={post} />
+            ) : null}
           </>
         )}
-        <Flex
-          alignItems={"center"}
-          gap={2}
-          justifyContent={"space-between"}
-          w={"full"}
-        >
-          {authUser && (
+        {authUser && (
+          <Flex
+            alignItems={"center"}
+            gap={2}
+            justifyContent={"space-between"}
+            w={"full"}
+          >
             <InputGroup>
               <Input
                 variant={"flushed"}
@@ -92,7 +121,6 @@ const PostFooter = ({ post, username, isProfilePage }) => {
                     color={"grey"}
                     fontWeight={600}
                     cursor={"pointer"}
-                    _hidden={true}
                     _hover={{ color: "white" }}
                     bg={"transparent"}
                     onClick={handleSubmitComment}
@@ -103,8 +131,8 @@ const PostFooter = ({ post, username, isProfilePage }) => {
                 )}
               </InputRightElement>
             </InputGroup>
-          )}
-        </Flex>
+          </Flex>
+        )}
       </Box>
     </>
   );
