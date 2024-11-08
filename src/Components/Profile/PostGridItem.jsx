@@ -1,8 +1,17 @@
 import { Flex, GridItem, Image, Text } from "@chakra-ui/react";
 import { AiFillHeart } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
+import usePostStore from "../../store/postStore";
+import { useEffect } from "react";
 
 const PostGridItem = ({ post, onOpen }) => {
+  const { fetchComments } = usePostStore();
+  useEffect(() => {
+    if (onOpen) {
+      fetchComments(post.id);
+    }
+  }, [onOpen, post.id, fetchComments]);
+
   return (
     <GridItem
       cursor={"pointer"}
