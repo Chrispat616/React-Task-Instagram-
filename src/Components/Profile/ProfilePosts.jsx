@@ -24,7 +24,6 @@ const ProfilePosts = () => {
       }}
       gap={1}
       columnGap={1}
-      isLoading={isLoading}
     >
       {posts.map((post) => (
         <ProfilePost post={post} key={post.id} />
@@ -32,6 +31,7 @@ const ProfilePosts = () => {
     </Grid>
   );
 };
+
 export default ProfilePosts;
 
 const NoPostsFound = () => {

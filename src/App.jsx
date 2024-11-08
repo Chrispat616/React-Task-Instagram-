@@ -6,20 +6,25 @@ import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import useAuthStore from "./store/authStore";
 
 function App() {
-  const  authUser = useAuthStore(state => state.user)
-  
-  return(
+  const authUser = useAuthStore((state) => state.user);
+
+  return (
     <>
-    <PageLayout>
-      <Routes>
-        <Route path='/' element={authUser ? <HomePage/> : <Navigate to="/auth" />} />
-        <Route path='/Auth' element={!authUser ? <AuthPage/> :<Navigate to="/" />} />
-        <Route path='/:username' element={<ProfilePage/>} />
-      </Routes>
-    </PageLayout>
+      <PageLayout>
+        <Routes>
+          <Route
+            path="/"
+            element={authUser ? <HomePage /> : <Navigate to="/auth" />}
+          />
+          <Route
+            path="/Auth"
+            element={!authUser ? <AuthPage /> : <Navigate to="/" />}
+          />
+          <Route path="/:username" element={<ProfilePage />} />
+        </Routes>
+      </PageLayout>
     </>
   );
 }
 
 export default App;
-

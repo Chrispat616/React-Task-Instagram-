@@ -10,6 +10,7 @@ const useUserProfileStore = create((set) => ({
         posts: [post.id, ...state.userProfile.posts],
       },
     })),
+
   deletePost: (postId) =>
     set((state) => ({
       userProfile: {
@@ -17,5 +18,11 @@ const useUserProfileStore = create((set) => ({
         posts: state.userProfile.posts.filter((id) => id !== postId),
       },
     })),
+  getPublicProfile: () =>
+    set((state) => {
+      const { post, fullname, profilePicURL, username, followers, following } =
+        state.userProfile;
+      return { post, fullname, profilePicURL, username, followers, following };
+    }),
 }));
 export default useUserProfileStore;

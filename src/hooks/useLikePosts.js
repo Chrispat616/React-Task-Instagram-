@@ -26,7 +26,7 @@ const useLikePosts = (post) => {
     if (!authUser) {
       return showToast(
         "Error",
-        "You must be logged in to like a post",
+        "You must be Logged in to like a post",
         "error"
       );
     }
