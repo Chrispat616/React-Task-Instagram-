@@ -18,21 +18,21 @@ const usePostStore = create((set) => ({
       ...doc.data(),
     }));
 
-    set((state) => ({
-      posts: state.posts.map((post) =>
+    set(({ posts }) => ({
+      posts: posts.map((post) =>
         post.id === postId ? { ...post, comments } : post
       ),
     }));
   },
 
   createPost: (post) =>
-    set((state) => ({
-      posts: [{ ...post, comments: [] }, ...state.posts],
+    set(({ posts }) => ({
+      posts: [{ ...post, comments: [] }, ...posts],
     })),
 
   deletePost: (id) =>
-    set((state) => ({
-      posts: state.posts.filter((post) => post.id !== id),
+    set(({ posts }) => ({
+      posts: posts.filter((post) => post.id !== id),
     })),
 
   setPosts: (posts) =>
@@ -44,15 +44,14 @@ const usePostStore = create((set) => ({
     }),
 
   addComment: (postId, comment) =>
-    set((state) => ({
-      posts: state.posts.map((post) => {
-        if (post.id === postId) {
-          return {
-            ...post,
-            comments: [...(post.comments || []), comment],
-          };
-        }
-        return post;
+    set(({ posts }) => ({
+      posts: posts.map((post) => {
+        if (post.id !== postId) return post;
+        const { comments = [], ...rest } = post;
+        return {
+          ...rest,
+          comments: [...comments, comment],
+        };
       }),
     })),
 }));
