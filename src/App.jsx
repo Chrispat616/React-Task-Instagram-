@@ -4,6 +4,8 @@ import AuthPage from "./Pages/AuthPage/AuthPage";
 import PageLayout from "./Layout/PageLayout/PageLayout";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import useAuthStore from "./store/authStore";
+import ChatPage from "./Components/Chats/ChatPage";
+import Messages from "./Components/SideBar/Messages";
 
 function App() {
   const authUser = useAuthStore((state) => state.user);
@@ -21,6 +23,8 @@ function App() {
             element={!authUser ? <AuthPage /> : <Navigate to="/" />}
           />
           <Route path="/:username" element={<ProfilePage />} />
+          <Route path="/" element={Messages} />
+          <Route path="/ChatPage" element={<ChatPage />} />
         </Routes>
       </PageLayout>
     </>
