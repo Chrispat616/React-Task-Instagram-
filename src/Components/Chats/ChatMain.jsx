@@ -107,7 +107,7 @@ const ChatMain = () => {
       >
         <Flex align="center" gap="20px">
           <Avatar
-            src={user?.avatar || "./avatar.png"}
+            src={user?.avatar || "./avatar-boy.svg"}
             alt="User Avatar"
             boxSize="60px"
             borderRadius="50%"
@@ -124,9 +124,9 @@ const ChatMain = () => {
         </Flex>
 
         <Flex className="icons" gap="20px">
-          <Image src="./phone.png" alt="Phone" boxSize="20px" />
-          <Image src="./video.png" alt="Video" boxSize="20px" />
-          <Image src="./info.png" alt="Info" boxSize="20px" />
+          <Image src="./phone-sv.svg" alt="Phone" boxSize="30px" />
+          <Image src="./video-call.svg" alt="Video" boxSize="30px" />
+          <Image src="./info-circle.svg" alt="Info" boxSize="30px" />
         </Flex>
       </Flex>
 
@@ -191,7 +191,7 @@ const ChatMain = () => {
         <Flex className="icons" gap="20px">
           <label htmlFor="file">
             <Image
-              src="./img.png"
+              src="./img-box.svg"
               alt="Upload"
               boxSize="20px"
               cursor="pointer"
@@ -199,12 +199,17 @@ const ChatMain = () => {
           </label>
           <Input type="file" id="file" display="none" />
           <Image
-            src="./camera.png"
+            src="./camera-svg.svg"
             alt="Camera"
             boxSize="20px"
             cursor="pointer"
           />
-          <Image src="./mic.png" alt="Mic" boxSize="20px" cursor="pointer" />
+          <Image
+            src="./mic-svg.svg"
+            alt="Mic"
+            boxSize="20px"
+            cursor="pointer"
+          />
         </Flex>
 
         <Input
@@ -226,7 +231,7 @@ const ChatMain = () => {
 
         <Box className="emoji" position="relative">
           <Image
-            src="./emoji.png"
+            src="./emoji-smile.svg"
             alt="Emoji"
             boxSize="20px"
             cursor="pointer"

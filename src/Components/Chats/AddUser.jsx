@@ -77,7 +77,7 @@ const AddUser = () => {
       await updateDoc(doc(userChatsRef, user.uid), {
         chats: arrayUnion({
           chatId: newChatRef.id,
-          lastMessage: "iuo",
+          lastMessage: "",
           receiverId: currentUser.uid,
           updatedAt: Date.now(),
         }),
@@ -86,7 +86,7 @@ const AddUser = () => {
       await updateDoc(doc(userChatsRef, currentUser.uid), {
         chats: arrayUnion({
           chatId: newChatRef.id,
-          lastMessage: "iuo",
+          lastMessage: "",
           receiverId: user.uid,
           updatedAt: Date.now(),
         }),
@@ -94,7 +94,6 @@ const AddUser = () => {
     } catch (err) {
       console.error("Error adding chat:", err);
     }
-    setUsers(null);
   };
 
   return (
@@ -150,7 +149,7 @@ const AddUser = () => {
           >
             <Flex align="center" gap="20px" className="detail">
               <Avatar
-                src={user.avatar || "./avatar.png"}
+                src={user.avatar || "./avatar-boy-svgrepo-com.svg"}
                 alt="User Avatar"
                 width="36px"
                 height="36px"

@@ -16,16 +16,15 @@ const useGetFeedPosts = () => {
   useEffect(() => {
     const getFeedPosts = async () => {
       setIsLoading(true);
-      if (authUser.following.length === 0) {
-        setIsLoading(false);
-        setPosts([]);
-        return;
-      }
-      const q = query(
-        collection(firestore, "posts"),
-        where("createdBy", "in", authUser.following)
-      );
+
       try {
+        const userIds = [...authUser.following, authUser.uid];
+
+        const q = query(
+          collection(firestore, "posts"),
+          where("createdBy", "in", userIds)
+        );
+
         const querySnapshot = await getDocs(q);
         const feedPosts = [];
 

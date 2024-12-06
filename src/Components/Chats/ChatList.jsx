@@ -82,7 +82,7 @@ const ChatList = () => {
           borderRadius="10px"
           p="5px"
         >
-          <Image src="./search.png" alt="Search Icon" boxSize="20px" />
+          <Image src="./search-svg.svg" alt="Search Icon" boxSize="20px" />
           <Input
             type="text"
             placeholder="Search"
@@ -96,7 +96,7 @@ const ChatList = () => {
         </Flex>
 
         <Image
-          src={addMode ? "./minus.png" : "./plus.png"}
+          src={addMode ? "./minus-svgrepo-com.svg" : "./plus-svgrepo-com.svg"}
           alt="Add Icon"
           className="add"
           boxSize="36px"
@@ -121,7 +121,7 @@ const ChatList = () => {
           onClick={() => handleSelect(chat)}
         >
           <Avatar
-            src={chat.user?.avatar || "./avatar.png"}
+            src={chat.user?.avatar || "./avatar-boy.svg"}
             alt="User Avatar"
             boxSize="36px"
             borderRadius="50%"

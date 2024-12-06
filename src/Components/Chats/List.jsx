@@ -4,12 +4,10 @@ import ChatList from "./ChatList";
 
 const List = () => {
   return (
-    <>
-      <Flex flex={1} flexDirection={"column"} display={"flex"}>
-        <UserInfo />
-        <ChatList />
-      </Flex>
-    </>
+    <Flex flex={1} flexDirection={"column"} display={"flex"}>
+      <UserInfo />
+      <ChatList />
+    </Flex>
   );
 };
 

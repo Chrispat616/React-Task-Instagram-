@@ -33,7 +33,7 @@ const UserInfo = () => {
         {currentUser ? (
           <Flex className="user" alignItems="center" gap="20px">
             <Avatar
-              src={currentUser.avatar || "./avatar.png"}
+              src={currentUser.avatar || "./avatar-boy-svgrepo-com.svg"}
               alt="User Avatar"
               width="50px"
               height="50px"
@@ -47,23 +47,23 @@ const UserInfo = () => {
         )}
         <Flex className="icons" gap="20px">
           <Image
-            src="./more.png"
+            src="./more-circle.svg"
             alt="More Options"
             width="20px"
             height="20px"
             cursor="pointer"
           />
           <Image
-            src="./cam.png"
+            src="./video-call.svg"
             alt="Video Options"
             width="20px"
             height="20px"
             cursor="pointer"
           />
           <Image
-            src="./edit.png"
+            src="./edit-svg.svg"
             alt="Edit Options"
-            width="20px"
+            width="15px"
             height="20px"
             cursor="pointer"
           />

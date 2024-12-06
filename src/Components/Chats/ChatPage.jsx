@@ -9,30 +9,28 @@ const ChatPage = () => {
   const authUser = useAuthStore((state) => state.user);
   const { chatId } = useChatStore();
   return authUser ? (
-    <>
-      <Flex
-        bgImage="url('/bg.jpg')"
-        bgSize="cover"
-        bgPosition="center"
-        height="100vh"
-        alignItems="center"
-        justifyContent="center"
-        color="white"
+    <Flex
+      bgImage="url('/bg.jpg')"
+      bgSize="cover"
+      bgPosition="center"
+      height="100vh"
+      alignItems="center"
+      justifyContent="center"
+      color="white"
+    >
+      <Box
+        width="80vw"
+        height="90vh"
+        bg="rgba(17, 25, 40, 0.75)"
+        backdropFilter="blur(19px) saturate(180%)"
+        borderRadius="12px"
+        border="1px solid rgba(255, 255, 255, 0.125)"
+        display="flex"
       >
-        <Box
-          width="80vw"
-          height="90vh"
-          bg="rgba(17, 25, 40, 0.75)"
-          backdropFilter="blur(19px) saturate(180%)"
-          borderRadius="12px"
-          border="1px solid rgba(255, 255, 255, 0.125)"
-          display="flex"
-        >
-          <List />
-          {chatId && <ChatMain />}
-        </Box>
-      </Flex>
-    </>
+        <List />
+        {chatId && <ChatMain />}
+      </Box>
+    </Flex>
   ) : (
     <AuthPage />
   );
