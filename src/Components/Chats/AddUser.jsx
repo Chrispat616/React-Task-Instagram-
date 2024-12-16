@@ -13,6 +13,7 @@ import {
   arrayUnion,
   collection,
   doc,
+  getDoc,
   getDocs,
   query,
   serverTimestamp,
@@ -21,11 +22,13 @@ import {
   where,
 } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
+import useShowToast from "../../hooks/useShowToast";
 
 const AddUser = () => {
   const [username, setUsername] = useState("");
   const [users, setUsers] = useState([]);
   const [err, setErr] = useState(false);
+  const showToast = useShowToast();
   const currentUser = useUserStore((state) => state.currentUser);
 
   const handleSearch = async (event) => {
@@ -44,7 +47,6 @@ const AddUser = () => {
       const querySnapshot = await getDocs(q);
       if (querySnapshot.empty) {
         setErr(true);
-        setUsers([]);
       } else {
         const matchedUsers = [];
         querySnapshot.forEach((doc) => {
@@ -54,8 +56,8 @@ const AddUser = () => {
         setErr(false);
         setUsername("");
       }
-    } catch (err) {
-      console.error("Error fetching users:", err);
+    } catch (error) {
+      showToast("Error", error.message, "error");
       setErr(true);
     }
   };
@@ -67,6 +69,22 @@ const AddUser = () => {
     const userChatsRef = collection(firestore, "userChats");
 
     try {
+      const currentUserChatsSnapshot = await getDoc(
+        doc(userChatsRef, currentUser.uid)
+      );
+      const currentUserChats = currentUserChatsSnapshot.exists()
+        ? currentUserChatsSnapshot.data().chats || []
+        : [];
+
+      const isUserAlreadyAdded = currentUserChats.some(
+        (chat) => chat.receiverId === user.uid
+      );
+
+      if (isUserAlreadyAdded) {
+        showToast("Error", "User already added", "error");
+        return;
+      }
+
       const newChatRef = doc(chatRef);
 
       await setDoc(newChatRef, {
@@ -91,9 +109,10 @@ const AddUser = () => {
           updatedAt: Date.now(),
         }),
       });
-    } catch (err) {
-      console.error("Error adding chat:", err);
+    } catch (error) {
+      showToast("Error", error.message, "error");
     }
+    setUsers([]);
   };
 
   return (

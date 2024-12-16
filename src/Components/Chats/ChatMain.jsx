@@ -19,11 +19,13 @@ import {
 import { firestore } from "../../firebase/firebase";
 import useChatStore from "../../store/chatStore";
 import useUserStore from "../../store/userStore";
-import moment from "moment";
+import { getTimeMs } from "../../utils/getTimeMs";
+import useShowToast from "../../hooks/useShowToast";
 
 const ChatMain = () => {
   const [chat, setChat] = useState();
   const [text, setText] = useState("");
+  const showToast = useShowToast();
   const currentUser = useUserStore((state) => state.currentUser);
   const { chatId, user } = useChatStore((state) => ({
     chatId: state.chatId,
@@ -46,7 +48,7 @@ const ChatMain = () => {
     };
   }, [chatId]);
 
-  const handleKey = (e) => {
+  const handleKeyPress = (e) => {
     if (e.code === "Enter") handleSend();
   };
   const handleSend = async () => {
@@ -84,8 +86,8 @@ const ChatMain = () => {
           });
         }
       });
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      showToast("Error", error.message, "error");
     } finally {
       setText("");
     }
@@ -170,7 +172,7 @@ const ChatMain = () => {
               <Text fontSize="10px">
                 {" "}
                 {message.createdAt
-                  ? moment(message.createdAt.toMillis()).fromNow()
+                  ? getTimeMs(message.createdAt.toDate?.() || message.createdAt)
                   : "N/A"}
               </Text>
             </VStack>
@@ -226,7 +228,7 @@ const ChatMain = () => {
           fontSize="16px"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          onKeyDown={handleKey}
+          onKeyDown={handleKeyPress}
         />
 
         <Box className="emoji" position="relative">

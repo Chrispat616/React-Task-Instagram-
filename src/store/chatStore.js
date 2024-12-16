@@ -5,7 +5,7 @@ const useChatStore = create((set) => ({
   chatId: null,
   user: null,
 
-  changeChat: (chatId, user) => {
+  setChangeChat: (chatId, user) => {
     const currentUser = useUserStore.getState().currentUser;
     if (currentUser) {
       set({
