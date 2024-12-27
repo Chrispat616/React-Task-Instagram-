@@ -5,23 +5,23 @@ import useUserStore from "../../store/userStore";
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import useChatStore from "../../store/chatStore";
+import useShowToast from "../../hooks/useShowToast";
 
 const ChatList = () => {
   const [addMode, setAddMode] = useState(false);
   const [chats, setChats] = useState([]);
   const currentUser = useUserStore((state) => state.currentUser);
-  const { changeChat } = useChatStore();
+  const { setChangeChat } = useChatStore();
+  const showToast = useShowToast();
 
   useEffect(() => {
     if (!currentUser?.uid) {
-      console.warn("currentUser or currentUser.uid is null.");
       return;
     }
 
     const userChatsDocRef = doc(firestore, "userChats", currentUser.uid);
     const unSub = onSnapshot(userChatsDocRef, async (res) => {
       if (!res.exists()) {
-        console.log("No chats found for this user.");
         setChats([]);
         return;
       }
@@ -64,9 +64,9 @@ const ChatList = () => {
       await updateDoc(userChatsRef, {
         chats: userChats,
       });
-      changeChat(chat.chatId, chat.user);
-    } catch (err) {
-      console.error("Error updating chat:", err);
+      setChangeChat(chat.chatId, chat.user);
+    } catch (error) {
+      showToast("Error", error.message, "error");
     }
   };
 
