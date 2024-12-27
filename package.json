@@ -15,7 +15,7 @@
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "ag-grid-community": "^32.1.0",
-    "ag-grid-react": "^32.1.0",
+    "ag-grid-react": "^32.3.3",
     "firebase": "^10.13.1",
     "framer-motion": "^11.3.27",
     "lodash.debounce": "^4.0.8",

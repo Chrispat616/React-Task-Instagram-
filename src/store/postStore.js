@@ -4,6 +4,12 @@ import { firestore } from "../firebase/firebase";
 
 const usePostStore = create((set) => ({
   posts: [],
+  updatePostLikes: (postId, likes) =>
+    set((state) => ({
+      posts: state.posts.map((post) =>
+        post.id === postId ? { ...post, likes } : post
+      ),
+    })),
 
   fetchComments: async (postId) => {
     const commentsQuery = query(

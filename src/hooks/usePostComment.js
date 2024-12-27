@@ -13,6 +13,7 @@ const usePostComment = () => {
 
   const handlePostComment = async (postId, comment, parentId = null) => {
     if (isCommenting) return;
+    if (comment === "") return;
     if (!authUser) {
       return showToast("Error", "Log in to comment", "error");
     }
