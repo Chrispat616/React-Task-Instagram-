@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+
+import { useState } from "react";
 import {
   Box,
   Flex,
@@ -14,30 +15,71 @@ import {
   FormLabel,
   Input,
   Button,
+  Text,
+  Avatar,
+
 } from "@chakra-ui/react";
 import { SearchLogo } from "../../assets/constants";
-import useSearchUser from "../../hooks/useSearchUser";
-import SuggestedUser from "../SuggestedUsers/SuggestedUser";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { firestore } from "../../firebase/firebase";
+import useShowToast from "../../hooks/useShowToast";
+import { Link } from "react-router-dom";
 
 const Search = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { users, isLoading, getUserProfiles, setUsers } = useSearchUser();
-  const searchRef = useRef(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [username, setUsername] = useState("");
+  const [users, setUsers] = useState([]);
+  const [err, setErr] = useState(false);
+  const { isOpen, onOpen, onClose: defaultOnClose } = useDisclosure();
 
-  const handleSearchUser = (e) => {
-    e.preventDefault();
-    const initials = searchRef.current.value;
-    setSearchTerm(initials);
-    getUserProfiles(initials);
+  const showToast = useShowToast();
+  const onClose = () => {
+    setUsers([]);
+    setErr(false);
+    setUsername("");
+    defaultOnClose();
   };
 
+  const handleSearch = async (event) => {
+    event.preventDefault();
+    setUsername("")
+
+    if (!username.trim()) return;
+
+    const userRef = collection(firestore, "users");
+    const q = query(
+      userRef,
+      where("username", ">=", username),
+      where("username", "<=", username + "\uf8ff")
+    );
+    try {
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        setErr(true);
+      } else {
+        const matchedUsers = [];
+        querySnapshot.forEach((doc) => {
+          matchedUsers.push(doc.data());
+        });
+        setUsers(matchedUsers)
+        setErr(false)
+      };
+    } catch (error) {
+      showToast("Error", error.message, "error");
+      setErr(true);
+    };
+  };
+  const handleUserClick = () => {
+    setUsers([]);
+    setErr(false);
+    setUsername("");
+    onClose();
+  };
   return (
     <>
       <Tooltip
         hasArrow
         label={"Search"}
-        placement="right"
+        placement='right'
         ml={1}
         openDelay={500}
         display={{ base: "block", md: "none" }}
@@ -62,10 +104,11 @@ const Search = () => {
           <ModalHeader>Search user</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <form onSubmit={handleSearchUser}>
+            <form onSubmit={handleSearch}>
               <FormControl>
                 <FormLabel></FormLabel>
-                <Input placeholder="Search User" ref={searchRef} />
+                <Input placeholder="Search User" value={username}
+                  onChange={(e) => setUsername(e.target.value)} />
               </FormControl>
               <Flex w={"full"} justifyContent={"flex-end"}>
                 <Button
@@ -73,24 +116,41 @@ const Search = () => {
                   ml={"auto"}
                   size={"sm"}
                   my={4}
-                  isLoading={isLoading}
                 >
                   Search
                 </Button>
               </Flex>
             </form>
-            {users && users.length > 0 ? (
+            {err && <Text color="red.500">No users found!</Text>}
+            {users &&
               users.map((user, index) => (
-                <SuggestedUser key={index} user={user} setUser={setUsers} />
-              ))
-            ) : searchTerm ? (
-              <Box>No users found `{searchTerm}`</Box>
-            ) : null}
+                <Flex
+                  onClick={handleUserClick}
+                  align="center"
+                  p="20px"
+                  className="user"
+                  key={index}
+                  borderBottom="1px solid #dddddd35"
+                >
+                  <Link to={`${user.username}`}>
+                    <Flex align="center" gap="20px" className="detail">
+                      <Avatar
+                        src={user.avatar || "./avatar-boy-svgrepo-com.svg"}
+                        alt="User Avatar"
+                        width="24px"
+                        height="24px"
+                        borderRadius="50%"
+                        objectFit="cover"
+                      />
+                      <Text color="white">{user.username}</Text>
+                    </Flex>
+                  </Link>
+                </Flex>
+              ))}
           </ModalBody>
         </ModalContent>
       </Modal>
     </>
   );
 };
-
 export default Search;
