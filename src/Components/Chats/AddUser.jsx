@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Box, Flex, FormControl, Input, Button, Text, Avatar } from '@chakra-ui/react';
-import useUserStore from '../../store/userStore';
+import { useState } from "react";
+import { Box, Flex, FormControl, Input, Button, Text, Avatar } from "@chakra-ui/react";
+import useUserStore from "../../store/userStore";
 import {
   arrayUnion,
   collection,
@@ -12,12 +12,13 @@ import {
   setDoc,
   updateDoc,
   where,
-} from 'firebase/firestore';
-import { firestore } from '../../firebase/firebase';
-import useShowToast from '../../hooks/useShowToast';
+} from "firebase/firestore";
+import { firestore } from "../../firebase/firebase";
+import useShowToast from "../../hooks/useShowToast";
+import { Link } from "react-router-dom";
 
 const AddUser = () => {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
   const [users, setUsers] = useState([]);
   const [err, setErr] = useState(false);
   const showToast = useShowToast();
@@ -28,11 +29,11 @@ const AddUser = () => {
 
     if (!username.trim()) return;
 
-    const userRef = collection(firestore, 'users');
+    const userRef = collection(firestore, "users");
     const q = query(
       userRef,
-      where('username', '>=', username),
-      where('username', '<=', username + '\uf8ff')
+      where("username", ">=", username),
+      where("username", "<=", username + "\uf8ff")
     );
 
     try {
@@ -46,10 +47,10 @@ const AddUser = () => {
         });
         setUsers(matchedUsers);
         setErr(false);
-        setUsername('');
+        setUsername("");
       }
     } catch (error) {
-      showToast('Error', error.message, 'error');
+      showToast("Error", error.message, "error");
       setErr(true);
     }
   };
@@ -57,8 +58,8 @@ const AddUser = () => {
   const handleAdd = async (user) => {
     if (!user || !currentUser) return;
 
-    const chatRef = collection(firestore, 'chats');
-    const userChatsRef = collection(firestore, 'userChats');
+    const chatRef = collection(firestore, "chats");
+    const userChatsRef = collection(firestore, "userChats");
 
     try {
       const currentUserChatsSnapshot = await getDoc(doc(userChatsRef, currentUser.uid));
@@ -69,7 +70,7 @@ const AddUser = () => {
       const isUserAlreadyAdded = currentUserChats.some((chat) => chat.receiverId === user.uid);
 
       if (isUserAlreadyAdded) {
-        showToast('Error', 'User already added', 'error');
+        showToast("Error", "User already added", "error");
         return;
       }
 
@@ -83,7 +84,7 @@ const AddUser = () => {
       await updateDoc(doc(userChatsRef, user.uid), {
         chats: arrayUnion({
           chatId: newChatRef.id,
-          lastMessage: '',
+          lastMessage: "",
           receiverId: currentUser.uid,
           updatedAt: Date.now(),
         }),
@@ -92,13 +93,13 @@ const AddUser = () => {
       await updateDoc(doc(userChatsRef, currentUser.uid), {
         chats: arrayUnion({
           chatId: newChatRef.id,
-          lastMessage: '',
+          lastMessage: "",
           receiverId: user.uid,
           updatedAt: Date.now(),
         }),
       });
     } catch (error) {
-      showToast('Error', error.message, 'error');
+      showToast("Error", error.message, "error");
     }
     setUsers([]);
   };
@@ -139,7 +140,7 @@ const AddUser = () => {
             borderRadius="10px"
             bg="#1a73e8"
             color="white"
-            _hover={{ bg: '#1665d8' }}
+            _hover={{ bg: "#1665d8" }}
           >
             Search
           </Button>
@@ -149,24 +150,26 @@ const AddUser = () => {
       {users &&
         users.map((user, index) => (
           <Flex mt="50px" align="center" justify="space-between" className="user" key={index}>
-            <Flex align="center" gap="20px" className="detail">
-              <Avatar
-                src={user.avatar || './avatar-boy-svgrepo-com.svg'}
-                alt="User Avatar"
-                width="36px"
-                height="36px"
-                borderRadius="50%"
-                objectFit="cover"
-              />
-              <Text color="white">{user.username}</Text>
-            </Flex>
+            <Link to={`/${user.username}`}>
+              <Flex align="center" gap="20px" className="detail">
+                <Avatar
+                  src={user.avatar || "./avatar-boy-svgrepo-com.svg"}
+                  alt="User Avatar"
+                  width="36px"
+                  height="36px"
+                  borderRadius="50%"
+                  objectFit="cover"
+                />
+                <Text color="white">{user.username}</Text>
+              </Flex>
+            </Link>
             <Button
               onClick={() => handleAdd(user)}
               p="5px"
               borderRadius="10px"
               bg="#1a73e8"
               color="white"
-              _hover={{ bg: '#1665d8' }}
+              _hover={{ bg: "#1665d8" }}
             >
               Add User
             </Button>

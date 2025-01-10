@@ -1,15 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
-import { Box, Flex, Image, Input, Text, VStack, Button, Avatar } from '@chakra-ui/react';
-import { arrayUnion, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
-import { firestore } from '../../firebase/firebase';
-import useChatStore from '../../store/chatStore';
-import useUserStore from '../../store/userStore';
-import { getTimeMs } from '../../utils/getTimeMs';
-import useShowToast from '../../hooks/useShowToast';
+import { useEffect, useRef, useState } from "react";
+import { Box, Flex, Image, Input, Text, VStack, Button, Avatar } from "@chakra-ui/react";
+import { arrayUnion, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { firestore } from "../../firebase/firebase";
+import useChatStore from "../../store/chatStore";
+import useUserStore from "../../store/userStore";
+import { getTimeMs } from "../../utils/getTimeMs";
+import useShowToast from "../../hooks/useShowToast";
 
 const ChatMain = () => {
   const [chat, setChat] = useState();
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const showToast = useShowToast();
   const currentUser = useUserStore((state) => state.currentUser);
   const { chatId, user } = useChatStore((state) => ({
@@ -20,27 +20,27 @@ const ChatMain = () => {
   const endRef = useRef(null);
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' });
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   useEffect(() => {
-    const unSub = onSnapshot(doc(firestore, 'chats', chatId), (res) => {
+    const unSubscribe = onSnapshot(doc(firestore, "chats", chatId), (res) => {
       setChat(res.data());
     });
 
     return () => {
-      unSub();
+      unSubscribe();
     };
   }, [chatId]);
 
   const handleKeyPress = (e) => {
-    if (e.code === 'Enter') handleSend();
+    if (e.code === "Enter") handleSend();
   };
   const handleSend = async () => {
-    if (text.trim() === '') return;
+    if (text.trim() === "") return;
 
     try {
-      await updateDoc(doc(firestore, 'chats', chatId), {
+      await updateDoc(doc(firestore, "chats", chatId), {
         messages: arrayUnion({
           senderId: currentUser.uid,
           text,
@@ -51,7 +51,7 @@ const ChatMain = () => {
       const userIDs = [currentUser.uid, user.uid];
 
       userIDs.forEach(async (uid) => {
-        const userChatsRef = doc(firestore, 'userChats', uid);
+        const userChatsRef = doc(firestore, "userChats", uid);
         const userChatsSnapshot = await getDoc(userChatsRef);
 
         if (userChatsSnapshot.exists()) {
@@ -69,9 +69,9 @@ const ChatMain = () => {
         }
       });
     } catch (error) {
-      showToast('Error', error.message, 'error');
+      showToast("Error", error.message, "error");
     } finally {
-      setText('');
+      setText("");
     }
   };
 
@@ -86,7 +86,7 @@ const ChatMain = () => {
       <Flex p="20px" align="center" justify="space-between" borderBottom="1px solid #dddddd35">
         <Flex align="center" gap="20px">
           <Avatar
-            src={user?.avatar || './avatar-boy.svg'}
+            src={user?.avatar || "./avatar-boy.svg"}
             alt="User Avatar"
             boxSize="60px"
             borderRadius="50%"
@@ -123,28 +123,28 @@ const ChatMain = () => {
             className="message"
             maxW="100%"
             gap="20px"
-            alignItems={'center'}
+            alignItems={"center"}
           >
             <VStack
               className="texts"
               align="start"
               spacing="5px"
               flex="1"
-              alignItems={message.senderId === currentUser?.uid ? 'end' : 'start'}
+              alignItems={message.senderId === currentUser?.uid ? "end" : "start"}
             >
               <Text
                 p="10px"
-                bg={message.senderId === currentUser?.uid ? 'blue.500' : 'gray.700'}
+                bg={message.senderId === currentUser?.uid ? "blue.500" : "gray.700"}
                 color="white"
                 borderRadius="10px"
               >
                 {message.text}
               </Text>
               <Text fontSize="10px">
-                {' '}
+                {" "}
                 {message.createdAt
                   ? getTimeMs(message.createdAt.toDate?.() || message.createdAt)
-                  : 'N/A'}
+                  : "N/A"}
               </Text>
             </VStack>
           </Flex>
@@ -199,7 +199,7 @@ const ChatMain = () => {
           p="10px 20px"
           borderRadius="5px 200px 200px 10px"
           cursor="pointer"
-          _disabled={{ bg: '#5182feb4', cursor: 'not-allowed' }}
+          _disabled={{ bg: "#5182feb4", cursor: "not-allowed" }}
           onClick={handleSend}
         >
           Send
