@@ -19,7 +19,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { IoMdMore } from "react-icons/io";
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon } from "@chakra-ui/icons";
 import Comments from "../Comments/Comments";
 import Caption from "../Comments/Caption";
 import PostFooter from "../Feedposts/PostFooter";
@@ -29,7 +29,6 @@ const PostModal = ({
   post,
   isOpen,
   onClose,
-  handleEdit,
   handleDeletePost,
   menuVisible,
   setMenuVisible,
@@ -45,12 +44,7 @@ const PostModal = ({
   }, [isOpen, post.id, fetchComments]);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      isCentered={true}
-      size={{ base: "3xl", md: "5xl" }}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} isCentered={true} size={{ base: "3xl", md: "5xl" }}>
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />
@@ -73,28 +67,16 @@ const PostModal = ({
             >
               <Image src={post.imageURL} alt="profile post" />
             </Flex>
-            <Flex
-              flex={1}
-              flexDir={"column"}
-              px={10}
-              display={{ base: "none", md: "flex" }}
-            >
+            <Flex flex={1} flexDir={"column"} px={10} display={{ base: "none", md: "flex" }}>
               <Flex alignItems={"center"} justifyContent={"space-between"}>
                 <Flex alignItems={"center"} gap={4}>
-                  <Avatar
-                    src={userProfile.profilePicURL}
-                    size={"sm"}
-                    name={userProfile.fullname}
-                  />
+                  <Avatar src={userProfile.profilePicURL} size={"sm"} name={userProfile.fullname} />
                   <Text fontWeight={"bold"} fontSize={12}>
                     {userProfile.username}
                   </Text>
                 </Flex>
                 {authUser?.uid === userProfile.uid && (
-                  <Menu
-                    isOpen={menuVisible}
-                    onClose={() => setMenuVisible(false)}
-                  >
+                  <Menu isOpen={menuVisible} onClose={() => setMenuVisible(false)}>
                     <MenuButton
                       as={Box}
                       _hover={{ bg: "whiteAlpha.300", color: "red.600" }}
@@ -104,15 +86,20 @@ const PostModal = ({
                     >
                       <Icon as={IoMdMore} size={50} cursor="pointer" />
                     </MenuButton>
-                    <MenuList>
-                      <MenuItem
-                        icon={<EditIcon />}
-                        onClick={handleEdit}
-                      ></MenuItem>
-                      <MenuItem
-                        icon={<DeleteIcon />}
-                        onClick={handleDeletePost}
-                      ></MenuItem>
+                    <MenuList minWidth="40px" minHeight="40px" zIndex={2}>
+                      <MenuItem onClick={handleDeletePost}>
+                        <span
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "100%",
+                            height: "100%",
+                          }}
+                        >
+                          <DeleteIcon />
+                        </span>
+                      </MenuItem>
                     </MenuList>
                   </Menu>
                 )}
@@ -125,13 +112,14 @@ const PostModal = ({
                 overflowY={"auto"}
                 style={{ paddingLeft: 25 }}
               >
-                {post.caption && <Caption post={post} />}
-                {post.comments.map((comment, index) => (
-                  <Comments
-                    key={comment.id || index}
-                    comment={comment}
-                    postId={post.id}
-                  />
+                {post.caption && (
+                  <Box position="sticky" top={0} bg={"black"} zIndex={1} w="full">
+                    <Caption post={post} />
+                    <Divider bg={"gray.500"} />
+                  </Box>
+                )}
+                {post.comments.map((comment) => (
+                  <Comments key={comment.commentId} comment={comment} postId={post.id} />
                 ))}
               </VStack>
               <Divider my={4} bg={"gray.800"} />

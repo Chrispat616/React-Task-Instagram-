@@ -20,18 +20,20 @@ import {
 import usePostComment from "../../hooks/usePostComment";
 import useAuthStore from "../../store/authStore";
 import useLikePosts from "../../hooks/useLikePosts";
-import moment from "moment/moment";
 import CommentsModal from "../Modals/CommentsModal";
 import usePostStore from "../../store/postStore";
+import useShowToast from "../../hooks/useShowToast";
+import { getTimeMs } from "../../utils/getTimeMs";
 
 const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
+  const [comment, setComment] = useState("");
   const { fetchComments } = usePostStore();
   const { isCommenting, handlePostComment } = usePostComment();
-  const [comment, setComment] = useState("");
   const authUser = useAuthStore((state) => state.user);
   const commentRef = useRef();
   const { handleLikePost, isLiked, likes } = useLikePosts(post);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const showToast = useShowToast();
 
   useEffect(() => {
     {
@@ -51,17 +53,21 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
           <Box onClick={handleLikePost} cursor={"pointer"} fontSize={18}>
             {!isLiked ? <NotificationsLogo /> : <UnlikeLogo />}
           </Box>
+          <Box cursor={"pointer"} fontSize={18} onClick={() => commentRef.current.focus()}>
+            <CommentLogo />
+          </Box>
           <Box
             cursor={"pointer"}
             fontSize={18}
-            onClick={() => commentRef.current.focus()}
+            onClick={() => showToast("Feature coming soon...", "", "info")}
           >
-            <CommentLogo />
-          </Box>
-          <Box cursor={"pointer"} fontSize={18}>
             <MessagesLogo />
           </Box>
-          <Box cursor={"pointer"} ml={"auto"}>
+          <Box
+            cursor={"pointer"}
+            ml={"auto"}
+            onClick={() => showToast("Feature coming soon...", "", "info")}
+          >
             <BookMarkLogo />
           </Box>
         </Flex>
@@ -71,7 +77,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 
         {isProfilePage && (
           <Text fontSize={12} color={"gray"}>
-            {moment(post.createdAt).fromNow()}
+            {post.createdAt ? getTimeMs(post.createdAt.toDate?.() || post.createdAt) : "N/A"}
           </Text>
         )}
         {!isProfilePage && (
@@ -84,27 +90,15 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
               </Text>
             </Text>
             {post.comments.length > 0 && (
-              <Text
-                fontSize={"small"}
-                color={"grey"}
-                cursor={"pointer"}
-                onClick={onOpen}
-              >
+              <Text fontSize={"small"} color={"grey"} cursor={"pointer"} onClick={onOpen}>
                 View all {post.comments.length} comments
               </Text>
             )}
-            {isOpen ? (
-              <CommentsModal isOpen={isOpen} onClose={onClose} post={post} />
-            ) : null}
+            {isOpen ? <CommentsModal isOpen={isOpen} onClose={onClose} post={post} /> : null}
           </>
         )}
         {authUser && (
-          <Flex
-            alignItems={"center"}
-            gap={2}
-            justifyContent={"space-between"}
-            w={"full"}
-          >
+          <Flex alignItems={"center"} gap={2} justifyContent={"space-between"} w={"full"}>
             <InputGroup>
               <Input
                 variant={"flushed"}
