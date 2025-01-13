@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
   Box,
   Button,
@@ -17,30 +18,22 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
-import { CreatePostLogo } from "../../assets/constants";
 import { BsFillImageFill } from "react-icons/bs";
+import { CreatePostLogo } from "../../assets/constants";
 import usePreviewImage from "../../hooks/usePreviewImage";
 import useShowToast from "../../hooks/useShowToast";
 import useAuthStore from "../../store/authStore";
 import usePostStore from "../../store/postStore";
 import useUserProfileStore from "../../store/userProfileStore";
-import {
-  arrayUnion,
-  collection,
-  doc,
-  addDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { arrayUnion, collection, doc, addDoc, updateDoc } from "firebase/firestore";
 import { firestore, storage } from "../../firebase/firebase";
 import { getDownloadURL, uploadString, ref } from "firebase/storage";
-import { useLocation } from "react-router-dom";
 
 const CreatePost = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [caption, setCaption] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const imageRef = useRef(null);
-  const { handleImageChange, selectedFile, setSelectedFile } =
-    usePreviewImage();
+  const { handleImageChange, selectedFile, setSelectedFile } = usePreviewImage();
   const showToast = useShowToast();
   const { isLoading, handleCreatePost } = useCreatePost();
 
@@ -83,19 +76,14 @@ const CreatePost = () => {
         <ModalOverlay />
         <ModalContent bg={"black"} border={"1px solid gray"}>
           <ModalHeader>Create Post</ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton onClick={() => setSelectedFile(null)} />
           <ModalBody pb={6}>
             <Textarea
               placeholder="Post caption..."
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
             />
-            <Input
-              type="file"
-              hidden
-              ref={imageRef}
-              onChange={handleImageChange}
-            />
+            <Input type="file" hidden ref={imageRef} onChange={handleImageChange} />
             <BsFillImageFill
               onClick={() => imageRef.current.click()}
               style={{
@@ -106,12 +94,7 @@ const CreatePost = () => {
               size={16}
             />
             {selectedFile && (
-              <Flex
-                mt={5}
-                w={"full"}
-                position={"relative"}
-                justifyContent={"center"}
-              >
+              <Flex mt={5} w={"full"} position={"relative"} justifyContent={"center"}>
                 <Image src={selectedFile} alt="Selected img" />
                 <CloseButton
                   position={"absolute"}
@@ -138,12 +121,12 @@ const CreatePost = () => {
 export default CreatePost;
 
 function useCreatePost() {
-  const showToast = useShowToast();
   const [isLoading, setIsLoading] = useState(false);
   const authUser = useAuthStore((state) => state.user);
   const createPost = usePostStore((state) => state.createPost);
   const addPost = useUserProfileStore((state) => state.addPost);
   const userProfile = useUserProfileStore((state) => state.userProfile);
+  const showToast = useShowToast();
   const { pathname } = useLocation();
 
   const handleCreatePost = async (selectedFile, caption) => {
@@ -153,7 +136,6 @@ function useCreatePost() {
     const newPost = {
       caption: caption,
       likes: [],
-      comments: [],
       createdAt: Date.now(),
       createdBy: authUser.uid,
     };
@@ -168,8 +150,7 @@ function useCreatePost() {
 
       newPost.imageURL = downloadURL;
 
-      if (userProfile.uid === authUser.uid)
-        createPost({ ...newPost, id: postDocRef.id });
+      if (userProfile.uid === authUser.uid) createPost({ ...newPost, id: postDocRef.id });
       if (pathname !== "/" && userProfile.uid === authUser.uid)
         addPost({ ...newPost, id: postDocRef.id });
 

@@ -5,6 +5,11 @@ import { firestore } from "../firebase/firebase";
 const usePostStore = create((set) => ({
   posts: [],
 
+  updatePostLikes: (postId, likes) =>
+    set((state) => ({
+      posts: state.posts.map((post) => (post.id === postId ? { ...post, likes } : post)),
+    })),
+
   fetchComments: async (postId) => {
     const commentsQuery = query(
       collection(firestore, "comments"),
@@ -19,9 +24,7 @@ const usePostStore = create((set) => ({
     }));
 
     set(({ posts }) => ({
-      posts: posts.map((post) =>
-        post.id === postId ? { ...post, comments } : post
-      ),
+      posts: posts.map((post) => (post.id === postId ? { ...post, comments } : post)),
     }));
   },
 
@@ -51,6 +54,17 @@ const usePostStore = create((set) => ({
         return {
           ...rest,
           comments: [...comments, comment],
+        };
+      }),
+    })),
+  removeComment: (postId, commentId) =>
+    set(({ posts }) => ({
+      posts: posts.map((post) => {
+        if (post.id !== postId) return post;
+        const { comments = [], ...rest } = post;
+        return {
+          ...rest,
+          comments: comments.filter((comment) => comment.commentId !== commentId),
         };
       }),
     })),
