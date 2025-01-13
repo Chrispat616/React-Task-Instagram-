@@ -5,15 +5,23 @@ export const getTimeMs = (timestamp: Date | null | undefined): string => {
 
   const now = moment();
   const givenTime = moment(timestamp);
-  const diffInSeconds = now.diff(givenTime, "seconds");
-  const diffInMinutes = now.diff(givenTime, "minutes");
-  const diffInHours = now.diff(givenTime, "hours");
+  const diffInSeconds = now.diff(givenTime, "s");
+  const diffInMinutes = now.diff(givenTime, "m");
+  const diffInHours = now.diff(givenTime, "h");
+  const diffInDays = now.diff(givenTime, "d");
+  const diffInWeeks = now.diff(givenTime, "w");
 
   if (diffInSeconds < 60) {
-    return `${diffInSeconds} second${diffInSeconds === 1 ? "" : "s"} ago`;
+    return `${diffInSeconds} s${diffInSeconds === 1 ? "" : ""} `;
   } else if (diffInMinutes < 60) {
-    return `${diffInMinutes} minute${diffInMinutes === 1 ? "" : "s"} ago`;
+    return `${diffInMinutes} m${diffInMinutes === 1 ? "" : ""} `;
+  } else if (diffInHours < 24) {
+    return `${diffInHours} h${diffInHours === 1 ? "" : ""} `;
+  } else if (diffInDays < 7) {
+    return `${diffInDays} d${diffInDays === 1 ? "" : ""} `;
+  } else if (diffInWeeks < 4) {
+    return `${diffInWeeks} w${diffInWeeks === 1 ? "" : ""} `;
   } else {
-    return `${diffInHours} hour${diffInHours === 1 ? "" : "s"} ago`;
+    return "N/A";
   }
 };
