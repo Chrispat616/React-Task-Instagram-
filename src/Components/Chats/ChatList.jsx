@@ -52,9 +52,7 @@ const ChatList = () => {
       return rest;
     });
 
-    const chatIndex = userChats.findIndex(
-      (item) => item.chatId === chat.chatId
-    );
+    const chatIndex = userChats.findIndex((item) => item.chatId === chat.chatId);
 
     userChats[chatIndex].isSeen = true;
 
@@ -85,16 +83,15 @@ const ChatList = () => {
           <Image src="./search-svg.svg" alt="Search Icon" boxSize="20px" />
           <Input
             type="text"
-            placeholder="Search"
+            placeholder=" Click on plus sign(+) to add user →"
             bg="transparent"
-            border="none"
+            border="1px solid rgba(255, 255, 255, 0.57)"
             outline="none"
             color="white"
             flex="2"
             _placeholder={{ color: "gray.400" }}
           />
         </Flex>
-
         <Image
           src={addMode ? "./minus-svgrepo-com.svg" : "./plus-svgrepo-com.svg"}
           alt="Add Icon"
@@ -107,7 +104,6 @@ const ChatList = () => {
           onClick={() => setAddMode((prev) => !prev)}
         />
       </Flex>
-
       {chats.map((chat) => (
         <Flex
           key={chat.chatId}
@@ -128,16 +124,13 @@ const ChatList = () => {
             objectFit="cover"
           />
           <VStack className="texts" align="start" spacing="10px">
-            <Text fontWeight="400">
-              {chat.user?.username || "Unknown User"}
-            </Text>
+            <Text fontWeight="400">{chat.user?.username || "Unknown User"}</Text>
             <Text fontSize="14px" fontWeight="250">
               {chat.lastMessage}
             </Text>
           </VStack>
         </Flex>
       ))}
-
       {addMode && <AddUser />}
     </Flex>
   );
