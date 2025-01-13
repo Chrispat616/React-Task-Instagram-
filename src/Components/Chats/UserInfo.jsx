@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { Avatar, Flex, Image, Text } from "@chakra-ui/react";
 import useUserStore from "../../store/userStore";
 import { getAuth } from "firebase/auth";
+import useShowToast from "../../hooks/useShowToast";
 
 const UserInfo = () => {
   const fetchUserInfo = useUserStore((state) => state.fetchUserInfo);
   const currentUser = useUserStore((state) => state.currentUser);
+  const showToast = useShowToast();
 
   useEffect(() => {
     const auth = getAuth();
@@ -24,16 +26,11 @@ const UserInfo = () => {
 
   return (
     <>
-      <Flex
-        className="userInfo"
-        p="20px"
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <Flex className="userInfo" p="20px" alignItems="center" justifyContent="space-between">
         {currentUser ? (
           <Flex className="user" alignItems="center" gap="20px">
             <Avatar
-              src={currentUser.avatar || "./avatar-boy-svgrepo-com.svg"}
+              src={currentUser.avatar || "./avatar-boy.svg"}
               alt="User Avatar"
               width="50px"
               height="50px"
@@ -45,7 +42,11 @@ const UserInfo = () => {
         ) : (
           <Text color="gray.500">No user data available</Text>
         )}
-        <Flex className="icons" gap="20px">
+        <Flex
+          className="icons"
+          gap="20px"
+          onClick={() => showToast("Feature coming soon...", "", "info")}
+        >
           <Image
             src="./more-circle.svg"
             alt="More Options"

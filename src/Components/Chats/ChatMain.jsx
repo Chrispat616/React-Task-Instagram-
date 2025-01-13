@@ -6,6 +6,7 @@ import useChatStore from "../../store/chatStore";
 import useUserStore from "../../store/userStore";
 import { getTimeMs } from "../../utils/getTimeMs";
 import useShowToast from "../../hooks/useShowToast";
+import { Link } from "react-router-dom";
 
 const ChatMain = () => {
   const [chat, setChat] = useState();
@@ -85,13 +86,15 @@ const ChatMain = () => {
     >
       <Flex p="20px" align="center" justify="space-between" borderBottom="1px solid #dddddd35">
         <Flex align="center" gap="20px">
-          <Avatar
-            src={user?.avatar || "./avatar-boy.svg"}
-            alt="User Avatar"
-            boxSize="60px"
-            borderRadius="50%"
-            objectFit="cover"
-          />
+          <Link to={`/${user.username}`}>
+            <Avatar
+              src={user?.avatar || "./avatar-boy.svg"}
+              alt="User Avatar"
+              boxSize="60px"
+              borderRadius="50%"
+              objectFit="cover"
+            />
+          </Link>
           <VStack className="texts" align="start" spacing="5px">
             <Text fontSize="18px" fontWeight="bold">
               {user?.username}
@@ -102,7 +105,11 @@ const ChatMain = () => {
           </VStack>
         </Flex>
 
-        <Flex className="icons" gap="20px">
+        <Flex
+          className="icons"
+          gap="20px"
+          onClick={() => showToast("Feature coming soon...", "", "info")}
+        >
           <Image src="./phone-sv.svg" alt="Phone" boxSize="30px" />
           <Image src="./video-call.svg" alt="Video" boxSize="30px" />
           <Image src="./info-circle.svg" alt="Info" boxSize="30px" />
@@ -161,10 +168,13 @@ const ChatMain = () => {
         borderTop="1px solid #dddddd35"
         gap="20px"
       >
-        <Flex className="icons" gap="20px">
-          <label htmlFor="file">
-            <Image src="./img-box.svg" alt="Upload" boxSize="20px" cursor="pointer" />
-          </label>
+        <Flex
+          className="icons"
+          gap="20px"
+          onClick={() => showToast("Feature coming soon...", "", "info")}
+        >
+          <Image src="./img-box.svg" alt="Upload" boxSize="20px" cursor="pointer" />
+
           <Input type="file" id="file" display="none" />
           <Image src="./camera-svg.svg" alt="Camera" boxSize="20px" cursor="pointer" />
           <Image src="./mic-svg.svg" alt="Mic" boxSize="20px" cursor="pointer" />
@@ -187,7 +197,11 @@ const ChatMain = () => {
           onKeyDown={handleKeyPress}
         />
 
-        <Box className="emoji" position="relative">
+        <Box
+          className="emoji"
+          position="relative"
+          onClick={() => showToast("Feature coming soon...", "", "info")}
+        >
           <Image src="./emoji-smile.svg" alt="Emoji" boxSize="20px" cursor="pointer" />
           <Box className="picker" position="absolute" bottom="50px" left="0"></Box>
         </Box>
