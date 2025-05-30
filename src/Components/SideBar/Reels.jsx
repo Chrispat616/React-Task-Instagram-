@@ -1,16 +1,10 @@
-import { Box, Flex, Tooltip } from '@chakra-ui/react';
-import {ReelsLogo } from '../../assets/constants';
+import { Box, Flex, Tooltip } from "@chakra-ui/react";
+import { ReelsLogo } from "../../assets/constants";
+import useShowToast from "../../hooks/useShowToast";
 
 const Reels = () => {
+  const showToast = useShowToast();
   return (
-    <Tooltip
-    hasArrow
-    label={"Reels"}
-    placement="right"
-    ml={1}
-    openDelay={500}
-    display={{ base: 'block', md: 'none' }}
-  >
     <Flex
       alignItems={"center"}
       gap={4}
@@ -19,13 +13,11 @@ const Reels = () => {
       padding={2}
       w={{ base: 10, md: "full" }}
       justifyContent={{ base: "center", md: "flex-start" }}
+      onClick={() => showToast("Coming soon...", "", "info")}
     >
       <ReelsLogo />
-      <Box display={{ base: "none", md: "block" }}>
-       Reels
-      </Box>
+      <Box display={{ base: "none", md: "block" }}>Reels</Box>
     </Flex>
-  </Tooltip>
   );
 };
 

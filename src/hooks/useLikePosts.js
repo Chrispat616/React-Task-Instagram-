@@ -3,11 +3,13 @@ import useAuthStore from "../store/authStore";
 import useShowToast from "./useShowToast";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
+import usePostStore from "../store/postStore";
 
 const useLikePosts = (post) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const authUser = useAuthStore((state) => state.user);
   const showToast = useShowToast();
+  const updatePostLikes = usePostStore((state) => state.updatePostLikes);
 
   const [likes, setLikes] = useState(post?.likes?.length || 0);
   const [isLiked, setIsLiked] = useState(
@@ -40,6 +42,12 @@ const useLikePosts = (post) => {
 
       setIsLiked(!isLiked);
       setLikes((prevLikes) => (isLiked ? prevLikes - 1 : prevLikes + 1));
+      updatePostLikes(
+        post.id,
+        isLiked
+          ? post.likes.filter((uid) => uid !== authUser.uid)
+          : [...post.likes, authUser.uid]
+      );
     } catch (error) {
       showToast("Error", error.message, "error");
     } finally {
