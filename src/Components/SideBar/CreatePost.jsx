@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
   Box,
   Button,
@@ -16,31 +17,23 @@ import {
   Textarea,
   Tooltip,
   useDisclosure,
-} from '@chakra-ui/react';
-import { CreatePostLogo } from '../../assets/constants';
-import usePreviewImage from '../../hooks/usePreviewImage';
-import useShowToast from '../../hooks/useShowToast';
-import useAuthStore from '../../store/authStore';
-import usePostStore from '../../store/postStore';
-import useUserProfileStore from '../../store/userProfileStore';
-import {
-  arrayUnion,
-  collection,
-  doc,
-  addDoc,
-  updateDoc,
-} from 'firebase/firestore';
-import { firestore, storage } from '../../firebase/firebase';
-import { getDownloadURL, uploadString, ref } from 'firebase/storage';
-import { useLocation } from 'react-router-dom';
-import { LuImagePlus } from 'react-icons/lu';
+} from "@chakra-ui/react";
+import { BsFillImageFill } from "react-icons/bs";
+import { CreatePostLogo } from "../../assets/constants";
+import usePreviewImage from "../../hooks/usePreviewImage";
+import useShowToast from "../../hooks/useShowToast";
+import useAuthStore from "../../store/authStore";
+import usePostStore from "../../store/postStore";
+import useUserProfileStore from "../../store/userProfileStore";
+import { arrayUnion, collection, doc, addDoc, updateDoc } from "firebase/firestore";
+import { firestore, storage } from "../../firebase/firebase";
+import { getDownloadURL, uploadString, ref } from "firebase/storage";
 
 const CreatePost = () => {
+  const [caption, setCaption] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [caption, setCaption] = useState('');
   const imageRef = useRef(null);
-  const { handleImageChange, selectedFile, setSelectedFile } =
-    usePreviewImage();
+  const { handleImageChange, selectedFile, setSelectedFile } = usePreviewImage();
   const showToast = useShowToast();
   const { isLoading, handleCreatePost } = useCreatePost();
 
@@ -48,10 +41,10 @@ const CreatePost = () => {
     try {
       await handleCreatePost(selectedFile, caption);
       onClose();
-      setCaption('');
+      setCaption("");
       setSelectedFile(null);
     } catch (error) {
-      showToast('Error', error.message, 'error');
+      showToast("Error", error.message, "error");
     }
   };
 
@@ -59,77 +52,56 @@ const CreatePost = () => {
     <>
       <Tooltip
         hasArrow
-        label={'Create'}
+        label={"Create"}
         placement="right"
         ml={1}
         openDelay={500}
-        display={{ base: 'block', md: 'none' }}
+        display={{ base: "block", md: "none" }}
       >
         <Flex
-          alignItems={'center'}
+          alignItems={"center"}
           gap={4}
-          _hover={{ bg: 'whiteAlpha.400' }}
+          _hover={{ bg: "whiteAlpha.400" }}
           borderRadius={6}
           padding={2}
-          w={{ base: 10, md: 'full' }}
-          justifyContent={{ base: 'center', md: 'flex-start' }}
+          w={{ base: 10, md: "full" }}
+          justifyContent={{ base: "center", md: "flex-start" }}
           onClick={onOpen}
         >
           <CreatePostLogo />
-          <Box display={{ base: 'none', md: 'block' }}>Create</Box>
+          <Box display={{ base: "none", md: "block" }}>Create</Box>
         </Flex>
       </Tooltip>
       <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
-        <ModalContent bg={'black'} border={'1px solid gray'}>
+        <ModalContent bg={"black"} border={"1px solid gray"}>
           <ModalHeader>Create Post</ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton onClick={() => setSelectedFile(null)} />
           <ModalBody pb={6}>
             <Textarea
               placeholder="Post caption..."
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
             />
-            <Input
-              type="file"
-              hidden
-              ref={imageRef}
-              onChange={handleImageChange}
+            <Input type="file" hidden ref={imageRef} onChange={handleImageChange} />
+            <BsFillImageFill
+              onClick={() => imageRef.current.click()}
+              style={{
+                marginTop: "15px",
+                marginLeft: "5px",
+                cursor: "pointer",
+              }}
+              size={16}
             />
-            <Tooltip label="Add image" aria-label="Add Image Tooltip">
-              <span
-                style={{
-                  display: 'inline-block',
-                  width: '40px',
-                  height: '40px',
-                }}
-              >
-                <LuImagePlus
-                  onClick={() => imageRef.current.click()}
-                  style={{
-                    marginTop: '15px',
-                    marginLeft: '5px',
-                    cursor: 'pointer',
-                    filter: 'brightness(0.9)',
-                  }}
-                  size={40}
-                />
-              </span>
-            </Tooltip>
             {selectedFile && (
-              <Flex
-                mt={5}
-                w={'full'}
-                position={'relative'}
-                justifyContent={'center'}
-              >
+              <Flex mt={5} w={"full"} position={"relative"} justifyContent={"center"}>
                 <Image src={selectedFile} alt="Selected img" />
                 <CloseButton
-                  position={'absolute'}
+                  position={"absolute"}
                   top={2}
                   right={2}
                   onClick={() => {
-                    setSelectedFile('');
+                    setSelectedFile("");
                   }}
                 />
               </Flex>
@@ -149,44 +121,42 @@ const CreatePost = () => {
 export default CreatePost;
 
 function useCreatePost() {
-  const showToast = useShowToast();
   const [isLoading, setIsLoading] = useState(false);
   const authUser = useAuthStore((state) => state.user);
   const createPost = usePostStore((state) => state.createPost);
   const addPost = useUserProfileStore((state) => state.addPost);
   const userProfile = useUserProfileStore((state) => state.userProfile);
+  const showToast = useShowToast();
   const { pathname } = useLocation();
 
   const handleCreatePost = async (selectedFile, caption) => {
-    if (!selectedFile) throw new Error('Please select an image');
+    if (!selectedFile) throw new Error("Please select an image");
     if (isLoading) return;
     setIsLoading(true);
     const newPost = {
       caption: caption,
       likes: [],
-      comments: [],
       createdAt: Date.now(),
       createdBy: authUser.uid,
     };
     try {
-      const postDocRef = await addDoc(collection(firestore, 'posts'), newPost);
-      const userDocRef = doc(firestore, 'users', authUser.uid);
+      const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
+      const userDocRef = doc(firestore, "users", authUser.uid);
       const imageRef = ref(storage, `posts/${postDocRef.id}`);
       await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
-      await uploadString(imageRef, selectedFile, 'data_url');
+      await uploadString(imageRef, selectedFile, "data_url");
       const downloadURL = await getDownloadURL(imageRef);
       await updateDoc(postDocRef, { imageURL: downloadURL });
 
       newPost.imageURL = downloadURL;
 
-      if (userProfile.uid === authUser.uid)
-        createPost({ ...newPost, id: postDocRef.id });
-      if (pathname !== '/' && userProfile.uid === authUser.uid)
+      if (userProfile.uid === authUser.uid) createPost({ ...newPost, id: postDocRef.id });
+      if (pathname !== "/" && userProfile.uid === authUser.uid)
         addPost({ ...newPost, id: postDocRef.id });
 
-      showToast('Success', 'Post created successfully', 'success');
+      showToast("Success", "Post created successfully", "success");
     } catch (error) {
-      showToast('Error', error.message, 'error');
+      showToast("Error", error.message, "error");
     } finally {
       setIsLoading(false);
     }
