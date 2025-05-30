@@ -1,16 +1,6 @@
-import {
-  Container,
-  Flex,
-  Link,
-  SkeletonCircle,
-  VStack,
-  Skeleton,
-  Text,
-} from "@chakra-ui/react";
+import { Container, Flex, Link, SkeletonCircle, VStack, Skeleton, Text } from "@chakra-ui/react";
 import ProfileHeader from "../../Components/Profile/ProfileHeader";
-import ProfilePosts from "../../Components/Profile/ProfilePosts";
 import ProfileTabs from "../../Components/Profile/ProfileTabs";
-import Overview from "../../Components/Overview/Overview";
 import useGetUserProfileByUsername from "../../hooks/useGetUserProfileByUsername";
 import { useParams } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
@@ -22,14 +12,7 @@ const ProfilePage = () => {
   if (userNotFound) return <UserNotFound />;
   return (
     <Container maxW="container.lg" py={5}>
-      <Flex
-        py={10}
-        px={4}
-        pl={{ base: 4, md: 10 }}
-        w={"full"}
-        mx={"auto"}
-        flexDirection={"column"}
-      >
+      <Flex py={10} px={4} pl={{ base: 4, md: 10 }} w={"full"} mx={"auto"} flexDirection={"column"}>
         {!isLoading && userProfile && <ProfileHeader />}
         {isLoading && <ProfileHeaderSkeleton />}
       </Flex>
@@ -42,10 +25,6 @@ const ProfilePage = () => {
         direction={"column"}
       >
         <ProfileTabs />
-        <ProfilePosts />
-      </Flex>
-      <Flex w="full" py={4}>
-        <Overview />
       </Flex>
     </Container>
   );
@@ -63,12 +42,7 @@ const ProfileHeaderSkeleton = () => {
     >
       <SkeletonCircle size="24" />
 
-      <VStack
-        alignItems={{ base: "center", sm: "flex-start" }}
-        gap={2}
-        mx={"auto"}
-        flex={1}
-      >
+      <VStack alignItems={{ base: "center", sm: "flex-start" }} gap={2} mx={"auto"} flex={1}>
         <Skeleton height="12px" width="150px" />
         <Skeleton height="12px" width="100px" />
       </VStack>
@@ -80,13 +54,7 @@ const UserNotFound = () => {
   return (
     <Flex flexDir="column" textAlign={"center"} max={"auto"}>
       <Text fontSize={"2xl"}>User Not Found</Text>
-      <Link
-        as={RouterLink}
-        to={"/"}
-        color={"blue.500"}
-        w={"max-content"}
-        mx={"auto"}
-      >
+      <Link as={RouterLink} to={"/"} color={"blue.500"} w={"max-content"} mx={"auto"}>
         Go Home
       </Link>
     </Flex>

@@ -14,16 +14,10 @@ function App() {
     <>
       <PageLayout>
         <Routes>
-          <Route
-            path="/"
-            element={authUser ? <HomePage /> : <Navigate to="/auth" />}
-          />
-          <Route
-            path="/Auth"
-            element={!authUser ? <AuthPage /> : <Navigate to="/" />}
-          />
+          <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/auth" />} />
+          <Route path="/Auth" element={!authUser ? <AuthPage /> : <Navigate to="/" />} />
           <Route path="/:username" element={<ProfilePage />} />
-          <Route path="/" element={Messages} />
+          <Route path="/Messages" element={<Messages />} />
           <Route path="/ChatPage" element={<ChatPage />} />
         </Routes>
       </PageLayout>

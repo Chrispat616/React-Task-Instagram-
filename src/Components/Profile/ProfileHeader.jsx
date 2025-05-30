@@ -1,40 +1,40 @@
-import {
-  Avatar,
-  Text,
-  AvatarGroup,
-  Flex,
-  VStack,
-  Button,
-} from "@chakra-ui/react";
+import { useState } from "react";
+import { Avatar, Text, AvatarGroup, Flex, VStack, Button } from "@chakra-ui/react";
 import useUserProfileStore from "../../store/userProfileStore";
 import useAuthStore from "../../store/authStore";
 import useFollowAndUnfollowUser from "../../hooks/useFollowAndUnfollowUser";
+import useShowToast from "../../hooks/useShowToast";
 
 const ProfileHeader = () => {
+  const [isZoomed, setIsZoomed] = useState(false);
+  const showToast = useShowToast();
   const { userProfile } = useUserProfileStore();
   const authUser = useAuthStore((state) => state.user);
-  const { isFollowing, isUpdating, handleFollowUser } =
-    useFollowAndUnfollowUser(userProfile.uid);
+  const { isFollowing, isUpdating, handleFollowUser } = useFollowAndUnfollowUser(userProfile.uid);
 
   const isAuthenticated = !!authUser;
-  const isOwnProfile =
-    isAuthenticated && authUser.username === userProfile?.username;
-  const isAnotherProfile =
-    isAuthenticated && authUser.username !== userProfile?.username;
+  const isOwnProfile = isAuthenticated && authUser.username === userProfile?.username;
+  const isAnotherProfile = isAuthenticated && authUser.username !== userProfile?.username;
 
+  const handleDoubleClick = () => {
+    setIsZoomed((prevZoom) => !prevZoom);
+  };
   return (
-    <Flex
-      gap={{ base: 4, sm: 10 }}
-      py={10}
-      direction={{ base: "column", sm: "row" }}
-    >
+    <Flex gap={{ base: 4, sm: 10 }} py={10} direction={{ base: "column", sm: "row" }}>
       <AvatarGroup
         size={{ base: "xl", md: "2xl" }}
         justifySelf={"center"}
         alignSelf={"flex-start"}
         mx={"auto"}
       >
-        <Avatar src={userProfile.profilePicURL} alt="User profile picture" />
+        <Avatar
+          src={userProfile.profilePicURL || "./avatar-boy.svg"}
+          alt="Zoomable"
+          cursor="pointer"
+          transition="transform 0.3s ease-in-out"
+          transform={isZoomed ? "scale(2)" : "scale(1)"}
+          onClick={handleDoubleClick}
+        />
       </AvatarGroup>
       <VStack alignItems={"start"} gap={2} mx={"auto"} flex={1}>
         <Flex
@@ -44,12 +44,15 @@ const ProfileHeader = () => {
           alignItems={"center"}
           w={"full"}
         >
-          <Text fontSize={{ base: "small", md: "large" }}>
-            {userProfile.username}
-          </Text>
+          <Text fontSize={{ base: "small", md: "large" }}>{userProfile.username}</Text>
 
           {isOwnProfile && (
-            <Flex gap={4} alignItems={"center"} justifyContent={"center"}>
+            <Flex
+              gap={4}
+              alignItems={"center"}
+              justifyContent={"center"}
+              onClick={() => showToast("Feature coming soon...", "", "info")}
+            >
               <Button
                 bg={"dimgray"}
                 color={"white"}

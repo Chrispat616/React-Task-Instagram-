@@ -1,7 +1,7 @@
 import { Avatar, Flex, Text } from "@chakra-ui/react";
-import moment from "moment/moment";
 import { Link } from "react-router-dom";
 import useUserProfileStore from "../../store/userProfileStore";
+import { getTimeMs } from "../../utils/getTimeMs";
 
 const Caption = ({ post }) => {
   const userProfile = useUserProfileStore((state) => state.userProfile);
@@ -20,8 +20,9 @@ const Caption = ({ post }) => {
           </Link>
           <Text fontSize={14}>{post.caption}</Text>
         </Flex>
-        <Text fontSize={12} color={"gray"}>
-          {moment(post.createdAt).fromNow()}
+        <Text fontSize={12} color="gray">
+          {" "}
+          {post.createdAt ? getTimeMs(post.createdAt.toDate?.() || post.createdAt) : "N/A"}
         </Text>
       </Flex>
     </Flex>
