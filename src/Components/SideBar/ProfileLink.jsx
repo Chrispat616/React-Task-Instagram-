@@ -7,31 +7,29 @@ const ProfileLink = () => {
 
   return (
     <Tooltip
-    hasArrow
-    label={"Profile"}
-    placement="right"
-    ml={1}
-    openDelay={500}
-    display={{ base: 'block', md: 'none' }}
-  >
-    <Link
-      display={"flex"}
-      as={RouterLink}
-      to={`${authUser.username}`}
-      alignItems={"center"}
-      gap={4}
-      _hover={{ bg: "whiteAlpha.400" }}
-      borderRadius={6}
-      padding={2}
-      w={{ base: 10, md: "full" }}
-      justifyContent={{ base: "center", md: "flex-start" }}
+      hasArrow
+      label={"Profile"}
+      placement="right"
+      ml={1}
+      openDelay={500}
+      display={{ base: "block", md: "none" }}
     >
-      <Avatar size={"sm"} src={authUser?.profilePicURL || ""}/>
-      <Box display={{ base: "none", md: "block" }}>
-       Profile
-      </Box>
-    </Link>
-  </Tooltip>
+      <Link
+        display={"flex"}
+        as={RouterLink}
+        to={`${authUser.username}`}
+        alignItems={"center"}
+        gap={4}
+        _hover={{ bg: "whiteAlpha.400" }}
+        borderRadius={6}
+        padding={2}
+        w={{ base: 10, md: "full" }}
+        justifyContent={{ base: "center", md: "flex-start" }}
+      >
+        <Avatar size={"sm"} src={authUser?.profilePicURL || "./avatar-boy.svg"} />
+        <Box display={{ base: "none", md: "block" }}>Profile</Box>
+      </Link>
+    </Tooltip>
   );
 };
 

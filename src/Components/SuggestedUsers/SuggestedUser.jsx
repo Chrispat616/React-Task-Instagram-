@@ -4,8 +4,7 @@ import useFollowAndUnfollowUser from "../../hooks/useFollowAndUnfollowUser";
 import { Link } from "react-router-dom";
 
 const SuggestedUser = ({ user, setUser }) => {
-  const { isFollowing, isUpdating, handleFollowUser } =
-    useFollowAndUnfollowUser(user.uid);
+  const { isFollowing, isUpdating, handleFollowUser } = useFollowAndUnfollowUser(user.uid);
   const authUser = useAuthStore((state) => state.user);
   const onFollowUser = async () => {
     await handleFollowUser();
@@ -20,7 +19,7 @@ const SuggestedUser = ({ user, setUser }) => {
     <Flex justifyContent={"space-between"} alignItems={"center"} w={"full"}>
       <Link to={`${user.username}`}>
         <Flex alignItems={"center"} gap={2}>
-          <Avatar src={user.profilePicURL} size={"md"} />
+          <Avatar src={user.profilePicURL || "./avatar-boy.svg"} size={"md"} />
           <VStack spacing={2}>
             <Box fontSize={12} fontWeight={"bold"}>
               {user.fullname}
@@ -44,13 +43,7 @@ const SuggestedUser = ({ user, setUser }) => {
           onClick={onFollowUser}
           disabled={isUpdating}
         >
-          {isUpdating ? (
-            <Spinner size="xs" />
-          ) : isFollowing ? (
-            "unfollow"
-          ) : (
-            "follow"
-          )}
+          {isUpdating ? <Spinner size="xs" /> : isFollowing ? "unfollow" : "follow"}
         </Button>
       )}
     </Flex>
